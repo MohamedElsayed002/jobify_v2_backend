@@ -5,7 +5,9 @@ import { UserModel } from '../models/user.model.js'
 import { JobModel } from '../models/job.model.js'
 import BadRequestError from '../errors/bad-request.js'
 import cloudinary from 'cloudinary'
-import {promises as fs} from 'fs'
+import { formatImage } from '../middleware/multer.js'
+// import {promises as fs} from 'f/s'
+
 
 
 const getCurrentUser = async (req,res) => {
@@ -24,8 +26,10 @@ const getApplicationStats  = async (req,res) => {
 const updateUser = async (req,res) => {
     const newUser = {...req.body}
     if(req.file) {
-        const response = await cloudinary.v2.uploader.upload(req.file.path)
-        await fs.unlink(req.file.path)
+        const file = formatImage(req.file)
+        // const response = await cloudinary.v2.uploader.upload(req.file.path)
+        const response = await cloudinary.v2.uploader.upload(file)
+        // await fs.unlink(req.file.path)
         newUser.avatar = response.secure_url
         newUser.avatarPublicId = response.public_id
     }
