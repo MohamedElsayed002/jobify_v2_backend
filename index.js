@@ -18,6 +18,8 @@ import { authenticateUser } from './middleware/authMiddleware.js'
 import {dirname} from 'path'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -35,6 +37,8 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+app.use(helmet())
+app.use(mongoSanitize())
 app.use(cookieParser())
 app.use(express.json())
 // app.use(cors())
